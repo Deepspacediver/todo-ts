@@ -1,12 +1,11 @@
-import { create } from "canvas-confetti";
 import { v4 as uuidV4 } from "uuid";
 
-const formTodo = document.querySelector(".todo-form") as Element;
+const formTodo = document.querySelector(".todo-form") as HTMLFormElement;
 const inputTodo = document.querySelector(
   ".todo-form_input"
 ) as HTMLInputElement;
-const btnSubmit = document.querySelector(".btn.btn--submit") as Element;
-const listTodo = document.querySelector(".todo-list") as Element;
+const btnSubmit = document.querySelector(".btn--submit") as HTMLButtonElement;
+const listTodo = document.querySelector(".todo-list") as HTMLUListElement;
 console.log(listTodo.firstElementChild);
 
 interface Todo {
