@@ -66,7 +66,7 @@ const removeTodo = (id: string) => {
   clearAndRenderTodos(listTodo);
 };
 
-formTodo.addEventListener("submit", (e: Event) => {
+formTodo.addEventListener("submit", (e: SubmitEvent) => {
   e.preventDefault();
   const name = inputTodo.value;
   if (!name) return;
@@ -75,7 +75,7 @@ formTodo.addEventListener("submit", (e: Event) => {
   clearAndRenderTodos(listTodo);
 });
 
-listTodo.addEventListener("click", (e: Event) => {
+listTodo.addEventListener("click", (e: MouseEvent) => {
   const target = e.target as HTMLElement;
   if (target && target.classList.contains("btn--delete")) {
     const id = target.parentElement?.dataset.id;
