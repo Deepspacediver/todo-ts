@@ -1,7 +1,14 @@
-import React, { useState, useEffect, useRef, FormEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  FormEvent,
+  MouseEvent,
+} from "react";
+import TodoItem from "./TodoItem";
 import uniqd from "uniqid";
 
-interface Todo {
+export interface TypeTodo {
   task: string;
   id: string;
 }
@@ -15,6 +22,7 @@ const TodoList = () => {
     localStorage.setItem("todos", JSON.stringify([]));
     return [];
   });
+
   let inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -25,12 +33,21 @@ const TodoList = () => {
     e.preventDefault();
     const input = inputRef.current;
     if (!input || !input.value) return;
-    setTodoList((prevState: Todo[]) => [
+    setTodoList((prevState: TypeTodo[]) => [
       ...prevState,
       { task: input.value, id: uniqd() },
     ]);
   };
-  console.log(todoList);
+
+  const handleDeleteTodo = (e: MouseEvent<HTMLButtonElement>) => {
+    const id = e.currentTarget.parentElement?.dataset.id;
+    if (id) {
+      const newList = todoList.filter((todo: TypeTodo) => todo.id !== id);
+      localStorage.setItem("todos", JSON.stringify(newList));
+      setTodoList(newList);
+    }
+  };
+
   return (
     <div>
       <form onSubmit={addTodo}>
@@ -39,8 +56,13 @@ const TodoList = () => {
         <button>Add Todo</button>
       </form>
       <ul>
-        {todoList?.map((todo: Todo) => (
-          <p key={todo.id}>{todo.task}</p>
+        {todoList?.map((todo: TypeTodo) => (
+          <TodoItem
+            task={todo.task}
+            id={todo.id}
+            key={todo.id}
+            handleDeleteTodo={handleDeleteTodo}
+          />
         ))}
       </ul>
     </div>
