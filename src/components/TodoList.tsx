@@ -1,3 +1,4 @@
+import { saveList, getList } from "../firebase";
 import React, {
   useState,
   useEffect,
@@ -14,19 +15,31 @@ export interface TypeTodo {
 }
 
 const TodoList = () => {
-  const [todoList, setTodoList] = useState(() => {
-    let savedTodos = localStorage.getItem("todos");
-    if (savedTodos) {
-      return JSON.parse(savedTodos);
-    }
-    localStorage.setItem("todos", JSON.stringify([]));
-    return [];
-  });
+  const [todoList, setTodoList] = useState<TypeTodo[]>([]);
+  const firstRender = useRef(true);
 
   let inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todoList));
+    // setIsLoading(true);
+    const getDataFromFirebase = async () => {
+      const todos = await getList();
+      if (todos) setTodoList(todos);
+
+      firstRender.current = false;
+      // setIsLoading(false);
+      // else setTodoList([]);
+    };
+    getDataFromFirebase();
+  }, []);
+
+  useEffect(() => {
+    if (firstRender.current) return;
+    async function saveData() {
+      console.log("save", todoList);
+      await saveList(todoList);
+    }
+    saveData();
   }, [todoList]);
 
   const addTodo = (e: FormEvent) => {
